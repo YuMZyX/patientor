@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Patient } from "../../types";
+import { Entry, Patient } from "../../types";
 import TransgenderIcon from '@mui/icons-material/Transgender';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
@@ -15,6 +15,8 @@ const PatientPage = () => {
       if (id !== undefined) {
         const patient = await patientService.get(id);
         setPatient(patient);
+      } else {
+        throw new Error('Cannot find patient id');
       }
     };
     void fetchPatient();
@@ -40,6 +42,17 @@ const PatientPage = () => {
       <h2>{patient.name} {genderIcon(patient)}</h2>
       <span>ssn: {patient.ssn}</span><br />
       <span>occupation: {patient.occupation}</span>
+      {patient.entries.length > 0 ? <h4>Entries:</h4> : <div></div>}
+      {patient.entries.map((entry: Entry) => 
+        <div key={entry.id}>
+          {entry.date} {entry.description}
+          <ul>
+            {entry.diagnosisCodes?.map((code: string) => 
+              <li key={code}>{code}</li>
+            )}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

@@ -24,6 +24,7 @@ module.exports = {
       "error",
       { "argsIgnorePattern": "^_" }
     ],
-    "no-case-declarations": "off"
+    "no-case-declarations": "off",
+    "quotes": [2, "single", { "avoidEscape": true }]
   },
 }

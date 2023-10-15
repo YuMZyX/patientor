@@ -1,4 +1,4 @@
-import { Diagnosis, HealthCheckEntry } from "../../types";
+import { Diagnosis, HealthCheckEntry, DiagnoseCode } from '../../types';
 import { List, ListItem, Box } from '@mui/material';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -11,12 +11,20 @@ interface Props {
 
 const HealthCheckEntryC = ({ entry, diagnoses } : Props ) => {
 
+  let codes: DiagnoseCode[] = [];
+  if (entry.diagnosisCodes !== undefined) {
+    codes = entry.diagnosisCodes.map((code: string) => {
+      return { code: code };
+    });
+  }
+  const filteredDiagnoseCodes = diagnoses.filter(d1 => codes.some(d2 => d1.code === d2.code));
+
   const diagnoseList = () => {
-    if (diagnoses != null && diagnoses.length > 0) {
+    if (filteredDiagnoseCodes != null && filteredDiagnoseCodes.length > 0) {
       return (
         <ListItem>
           <ul>
-            {diagnoses.map((d: Diagnosis) => 
+            {filteredDiagnoseCodes.map((d: Diagnosis) => 
               <li key={d.code}>{d.code} {d.name}</li>
             )}
           </ul>
@@ -28,20 +36,20 @@ const HealthCheckEntryC = ({ entry, diagnoses } : Props ) => {
   const commonStyles = {
     bgcolor: 'background.paper',
     borderColor: 'text.primary',
-    m: 1,
+    m: 2,
     border: 1,
   };
 
   const heartIcon = () => {
     switch (entry.healthCheckRating) {
       case 0:
-        return <FavoriteIcon sx={{ color: "green" }}></FavoriteIcon>;
+        return <FavoriteIcon sx={{ color: 'green' }}></FavoriteIcon>;
       case 1:
-        return <FavoriteIcon sx={{ color: "yellow" }}></FavoriteIcon>;
+        return <FavoriteIcon sx={{ color: 'yellow' }}></FavoriteIcon>;
       case 2:
-        return <FavoriteIcon sx={{ color: "orange" }}></FavoriteIcon>;
+        return <FavoriteIcon sx={{ color: 'orange' }}></FavoriteIcon>;
       case 3:
-        return <FavoriteIcon sx={{ color: "red" }}></FavoriteIcon>;
+        return <FavoriteIcon sx={{ color: 'red' }}></FavoriteIcon>;
       default:
         return null;
     }

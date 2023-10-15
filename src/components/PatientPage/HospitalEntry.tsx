@@ -1,4 +1,4 @@
-import { Diagnosis, HospitalEntry } from "../../types";
+import { Diagnosis, HospitalEntry, DiagnoseCode } from '../../types';
 import { List, ListItem, Box } from '@mui/material';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 
@@ -9,12 +9,20 @@ interface Props {
 
 const HospitalEntryC = ({ entry, diagnoses } : Props ) => {
 
+  let codes: DiagnoseCode[] = [];
+  if (entry.diagnosisCodes !== undefined) {
+    codes = entry.diagnosisCodes.map((code: string) => {
+      return { code: code };
+    });
+  }
+  const filteredDiagnoseCodes = diagnoses.filter(d1 => codes.some(d2 => d1.code === d2.code));
+
   const diagnoseList = () => {
-    if (diagnoses != null && diagnoses.length > 0) {
+    if (filteredDiagnoseCodes != null && filteredDiagnoseCodes.length > 0) {
       return (
         <ListItem>
           <ul>
-            {diagnoses.map((d: Diagnosis) => 
+            {filteredDiagnoseCodes.map((d: Diagnosis) => 
               <li key={d.code}>{d.code} {d.name}</li>
             )}
           </ul>
@@ -26,7 +34,7 @@ const HospitalEntryC = ({ entry, diagnoses } : Props ) => {
   const commonStyles = {
     bgcolor: 'background.paper',
     borderColor: 'text.primary',
-    m: 1,
+    m: 2,
     border: 1,
   };
 
